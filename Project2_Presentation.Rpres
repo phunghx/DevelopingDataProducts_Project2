@@ -1,0 +1,54 @@
+Study about the relationship between parents' height and children's height
+========================================================
+author: Huynh xuan phung
+date: 
+
+Overview
+========================================================
+
+- Loading dataset
+```{r}
+library(HistData)
+data(GaltonFamilies)
+
+```
+- Summary data
+```{r}
+#summary(GaltonFamilies)
+#head(GaltonFamilies)
+names(GaltonFamilies)
+```
+
+Plotting a graph that depict the correlation
+========================================================
+
+```{r}
+library(ggplot2)
+qplot(x = midparentHeight, y = childHeight, data = GaltonFamilies) +
+  facet_wrap(~gender)
+```
+
+The relationship
+========================================================
+- Graph demonstrated the positive correlation between  midparentHeight (father + 1.8 * mother) and childHeight based on gender
+- Correlation test
+```{r, echo=FALSE}
+cor.test(GaltonFamilies$midparentHeight, GaltonFamilies$childHeight)
+```
+
+Providing predict model
+========================================================
+- We need more variables to predict childHeight exactly
+- We don't need family and midParentHeight variable
+- caret package is used to make model
+```{r}
+GaltonFamilies <- GaltonFamilies[,-c(1,4)]
+library(caret)
+set.seed(123)
+inTrain <- createDataPartition(y=GaltonFamilies$childHeight,p=0.85, list=FALSE)
+training <- GaltonFamilies[inTrain,]
+testing <- GaltonFamilies[-inTrain,]
+#modFit <- train(childHeight ~ ., data= training, method = "rf", prox=TRUE)
+
+```
+
